@@ -130,6 +130,7 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 #### 最终的效果
 　　宽：150dp、高：100dp、diffTextSizeScale：0.618、maxTextSize：60：
 ![](https://github.com/yizhanzjz/ImageRepo/raw/master/auto_adjust_text_size_0.png)
+
 　　宽：150dp、高：100dp、diffTextSizeScale：0.618、maxTextSize：20：
 ![](https://github.com/yizhanzjz/ImageRepo/raw/master/auto_adjust_text_size_1.png)
 	
