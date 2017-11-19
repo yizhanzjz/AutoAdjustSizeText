@@ -1,5 +1,5 @@
 # AutoAdjustSizeText
-　　最近在项目中遇到一个这样的需求：一个显示金额的view，给定最大的字号，需根据view的宽高使金额字体显示地尽量大、务必完整，且小数位要比整数位小几个字号。
+　　　最近在项目中遇到一个这样的需求：一个显示金额的view，给定最大的字号，需根据view的宽高使金额字体显示地尽量大、务必完整，且小数位要比整数位小几个字号。
 　　基本的分析思路是这样的：金额其实也就是文本，画文本Canvas有drawText方法可以使用；不同字号的字体，通过调用Paint的setTextSize方法传入不同的参数可以实现；而怎么才能使文本字体尽量大呢？
 　　之前在学自定义控件的时候，记得有一个Paint的getTextBounds方法可以在文本画出之前计算出Text的边界数值(left,top,right,bottom)。
 　　接下来是具体实现：
@@ -13,7 +13,8 @@ diffTextSizeScale    | 小数位字号等于整数位字号*diffTextSizeScale，
 textColor     | 字体颜色
 text     | 字体内容
 　　怎么自定义属性呢？
-　　　　首先，在values目录下创建属性文件: ```attrs.xml```，然后在该文件中设置如下内容：``` 
+　　　　首先，在values目录下创建属性文件: ```attrs.xml```，然后在该文件中设置如下内容：
+``` 
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AutoAdjustView">
@@ -24,7 +25,8 @@ text     | 字体内容
     </declare-styleable>
 </resources>
 ```
-　　其次，就是在布局文件使用，注意，自定义属性使用的前缀为```app```：``` 
+　　其次，就是在布局文件使用，注意，自定义属性使用的前缀为```app```：
+``` 
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -41,7 +43,8 @@ text     | 字体内容
 
 </RelativeLayout>
 ```
-　　最后，就是在自定义控件的构造方法中去获取布局中这些属性设置的值``` 
+　　最后，就是在自定义控件的构造方法中去获取布局中这些属性设置的值
+``` 
 public AutoAjustTextSizeView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
 
@@ -55,7 +58,8 @@ public AutoAjustTextSizeView(Context context, @Nullable AttributeSet attrs) {
     }
 ```
 #### 2. 设置Paint
-　　canvas的drawText方法是要传入Paint参数的，所以，这里说一下Paint的设置。```
+　　canvas的drawText方法是要传入Paint参数的，所以，这里说一下Paint的设置。
+```
 private void init() {
     mPaint = new Paint();
     mPaint.setStyle(Paint.Style.FILL);//画笔模式为填充
@@ -77,7 +81,8 @@ CENTER |(x,y)表示基线与字体水平中心线的交点坐标
 RIGHT |(x,y)表示基线与字体右边界的交点坐标 
 　　至于什么是基线，请查阅getFontMetrics方法
 #### 3. 获取当前控件的宽高
-　　在这里，获取控件的宽高，主要作用是：宽度用来与计算出来的字体宽度进行比对从而决定当前的textSize是否合适（不大于控件宽度的最大textSize即为合适），宽度还可以协助指定上述x坐标，高度主要是用来是画出来的字体垂直居中的。``` 
+　　在这里，获取控件的宽高，主要作用是：宽度用来与计算出来的字体宽度进行比对从而决定当前的textSize是否合适（不大于控件宽度的最大textSize即为合适），宽度还可以协助指定上述x坐标，高度主要是用来是画出来的字体垂直居中的。
+``` 
 @Override
 protected void onSizeChanged(int w, int h, int oldw, int oldh) {
     super.onSizeChanged(w, h, oldw, oldh);
@@ -87,8 +92,10 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 }
 ```
 #### 4. 在onDraw方法里递归出最合适的textSize并垂直居中画出Text
-　　1) 循环出控件宽度允许范围内的最大textSize。```    float fontScale = getFontScale(getContext());
-
+　　1) 循环出控件宽度允许范围内的最大textSize。
+```
+    float fontScale = getFontScale(getContext());
+    
     int width = 0;//用来记录测量出来的字体宽度
 
     float textSize = this.mMaxTextSize + 1f;//加1，为了第一次的textSize为mMaxTextSize
@@ -105,7 +112,8 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 ```
 　　　　主要的思路是，不断调整textSize的大小，使用getTextBounds计算出当前textSize下整数位字体和小数位字体的宽度，最终得到首次不大于控件宽度的textSize。
 　　2) 先画出小数位，再画出整数位
-　　　　上面在初始化Paint对象时```setTextAlign```传入的参数为```Paint.Align.RIGHT```表示相对于字体看，(x,y)坐标指的是字体大概右下角的位置（并不是右下角）``` 
+　　　　上面在初始化Paint对象时```setTextAlign```传入的参数为```Paint.Align.RIGHT```表示相对于字体看，(x,y)坐标指的是字体大概右下角的位置（并不是右下角）
+``` 
 	//小字体的宽度
     int w = rect1.right - rect1.left;
 
@@ -126,3 +134,5 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 	
 #### 总结
 　　其实核心代码很简单的，第一次写博客，个人感觉写的有些啰嗦吧，有待提高。有问题的话，多多指教。
+
+##### 源码地址：https://github.com/yizhanzjz/AutoAdjustSizeText
