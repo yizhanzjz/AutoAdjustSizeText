@@ -13,7 +13,7 @@ diffTextSizeScale    | 小数位字号等于整数位字号*diffTextSizeScale，
 textColor     | 字体颜色
 text     | 字体内容
   
-　　怎么自定义属性呢？
+　　怎么自定义属性呢？<br/>
 　　　　首先，在values目录下创建属性文件: ```attrs.xml```，然后在该文件中设置如下内容：
 ``` 
 <?xml version="1.0" encoding="utf-8"?>
@@ -135,5 +135,3 @@ protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 	
 #### 总结
 　　其实核心代码很简单的，第一次写博客，个人感觉写的有些啰嗦吧，有待提高。有问题的话，多多指教。
-
-##### 源码地址：https://github.com/yizhanzjz/AutoAdjustSizeText
